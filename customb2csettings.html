@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
-            var config = {
-                tenant: "sramtx.onmicrosoft.com",
-                policyName: "B2C_1_SR_B2C_Test_pwdreset",
-            };
-            var authUrl = "https://" + config.tenant + ".b2clogin.com/" + config.tenant + ".onmicrosoft.com/" + config.policyName + "/oauth2/v2.0/authorize?p=" + config.policyName + "&client_id=fake_client_id&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fjwt.ms&scope=openid&response_type=id_token&prompt=login";
-            $("#auth-iframe").attr("src", authUrl);
+            // Function to hide the "Change Email" button
+            function hideChangeEmailButton() {
+                var changeEmailButton = document.querySelector(".changeEmail");
+                if (changeEmailButton) {
+                    changeEmailButton.style.display = "none";
+                }
+            }
+            
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === "childList") {
+                        hideChangeEmailButton();
+                    }
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Run the function initially to hide the "Change Email" button if it's already present
+            hideChangeEmailButton();
         });
     </script>
 </head>
 <body>
-    <iframe id="auth-iframe" onload="this.contentWindow.document.head.innerHTML += '<style>.changeEmail { display: none !important; }</style>'"></iframe>
+    <div id="api"></div>
 </body>
 </html>
