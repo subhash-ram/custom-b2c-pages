@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .changeEmail {
-            display: none !important;
-        }
-    </style>
-</head>
-<body>
-    <div id="api"></div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            // Function to hide the "Change Email" button
+            function hideChangeEmailButton() {
+                var changeEmailButton = document.querySelector(".changeEmail");
+                if (changeEmailButton) {
+                    changeEmailButton.style.display = "none";
+                }
+            }
+            
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === "childList") {
+                        hideChangeEmailButton();
+                    }
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Run the function initially to hide the "Change Email" button if it's already present
+            hideChangeEmailButton();
+        });
+    </script>
+</head>
+<body>
+    <div id="api"></div>
+    <script type="text/javascript">
+        (function() {
             var config = {
                 tenant: "sramtx.onmicrosoft.com",
                 policyName: "B2C_1_SR_B2C_Test_pwdreset",
@@ -19,10 +38,14 @@
             };
             var element = document.getElementById(config.elementId);
             var authUrl = "https://" + config.tenant + ".b2clogin.com/" + config.tenant + ".onmicrosoft.com/" + config.policyName + "/api/CombinedSigninAndSignup/GetContent";
-            $.getJSON(authUrl, function(content) {
-                element.innerHTML = content;
-            });
-        });
+            fetch(authUrl)
+                .then(function(response) {
+                    return response.text();
+                })
+                .then(function(content) {
+                    element.innerHTML = content;
+                });
+        })();
     </script>
 </body>
 </html>
