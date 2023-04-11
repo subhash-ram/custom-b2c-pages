@@ -8,5 +8,21 @@
     </style>
 </head>
 <body>
+    <div id="api"></div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var config = {
+                tenant: "your-tenant-name.onmicrosoft.com",
+                policyName: "your-policy-name",
+                elementId: "api",
+            };
+            var element = document.getElementById(config.elementId);
+            var authUrl = "https://" + config.tenant + ".b2clogin.com/" + config.tenant + ".onmicrosoft.com/" + config.policyName + "/api/CombinedSigninAndSignup/GetContent";
+            $.getJSON(authUrl, function(content) {
+                element.innerHTML = content;
+            });
+        });
+    </script>
 </body>
 </html>
